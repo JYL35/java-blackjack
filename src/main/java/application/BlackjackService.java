@@ -19,14 +19,18 @@ public class BlackjackService {
     private final Deck deck;
 
     public BlackjackService(Map<String, Integer> playerBetAmounts, Deck deck) {
+        this.members = new Members(setUpMembers(playerBetAmounts));
+        this.deck = deck;
+        distributeInitCard();
+    }
+
+    private Map<String, Money> setUpMembers(Map<String, Integer> playerBetAmounts) {
         Map<String, Money> playerBets = new HashMap<>();
         for (String name : playerBetAmounts.keySet()) {
             Money betMoney = new Money(playerBetAmounts.get(name));
             playerBets.put(name, betMoney);
         }
-        this.members = new Members(playerBets);
-        this.deck = deck;
-        distributeInitCard();
+        return playerBets;
     }
 
     private void distributeInitCard() {
