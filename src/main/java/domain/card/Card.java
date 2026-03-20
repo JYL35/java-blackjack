@@ -1,21 +1,15 @@
 package domain.card;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 public class Card {
 
-    private static final Map<String, Card> CACHE = new HashMap<>();
+    private static final Map<String, Card> ALL_CARDS_CACHE = new HashMap<>();
 
     static {
-        Arrays.stream(CardPattern.values())
-                .forEach(pattern -> Arrays.stream(CardNumber.values())
-                        .forEach(number -> {
-                            String key = generateKey(number.getCourt(), pattern.getName());
-                            CACHE.put(key, new Card(number.getCourt(), pattern.getName()));
-                        }));
+        initializeCards();
     }
 
     private final CardPattern pattern;
@@ -28,10 +22,10 @@ public class Card {
 
     public static Card from(String number, String pattern) {
         String key = generateKey(number, pattern);
-        if (!CACHE.containsKey(key)) {
+        if (!ALL_CARDS_CACHE.containsKey(key)) {
             throw new IllegalArgumentException("존재하지 않는 카드 조합입니다: " + key);
         }
-        return CACHE.get(key);
+        return ALL_CARDS_CACHE.get(key);
     }
 
     private static String generateKey(String number, String pattern) {
@@ -44,6 +38,19 @@ public class Card {
 
     public String cardName() {
         return number.getCourt() + pattern.getName();
+    }
+
+    private static void initializeCards() {
+        for (CardPattern pattern : CardPattern.values()) {
+            putCardsByPattern(pattern);
+        }
+    }
+
+    private static void putCardsByPattern(CardPattern pattern) {
+        for (CardNumber number : CardNumber.values()) {
+            String key = generateKey(number.getCourt(), pattern.getName());
+            ALL_CARDS_CACHE.put(key, new Card(number.getCourt(), pattern.getName()));
+        }
     }
 
     @Override
