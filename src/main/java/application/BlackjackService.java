@@ -8,10 +8,7 @@ import dto.RoundResult;
 import dto.GameResult;
 import dto.MemberStatus;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class BlackjackService {
 
@@ -85,7 +82,7 @@ public class BlackjackService {
         members.getAllPlayerName().stream()
                 .map(name -> new MemberStatus(name, members.findCardByName(name), members.getPlayerScore(name)))
                 .forEach(memberStatuses::add);
-        return List.copyOf(memberStatuses);
+        return Collections.unmodifiableList(memberStatuses);
     }
 
     public List<GameResult> getGameResults() {

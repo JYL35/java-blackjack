@@ -4,6 +4,7 @@ import domain.card.Card;
 import domain.card.CardNumber;
 import constant.exception.DuplicatedException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Hand {
@@ -23,7 +24,7 @@ public class Hand {
     }
 
     public List<Card> getAllCard() {
-        return List.copyOf(cards);
+        return Collections.unmodifiableList(cards);
     }
 
     public Hand appendCard(Card card) {
